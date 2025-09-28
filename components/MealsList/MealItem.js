@@ -20,22 +20,12 @@ const MealItem = ({
 }) => {
   const navigation = useNavigation();
 
-  /*   const mealItemProps = {
-    title,
-    imageUrl,
-    complexity,
-    duration,
-    affordability,
-  };
- */
   return (
     <View style={styles.mealItem}>
       <Pressable
         style={({ pressed }) => (pressed ? styles.buttonPressed : null)}
         android_ripple={{ color: "#ccc" }}
-        onPress={() =>
-          navigation.navigate("MealDetails", { mealId: id } /* mealItemProps */)
-        }
+        onPress={() => navigation.navigate("MealDetails", { mealId: id })}
       >
         <View style={styles.innerContainer}>
           <View>

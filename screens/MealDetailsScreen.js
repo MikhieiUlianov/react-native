@@ -6,19 +6,28 @@ import List from "../components/MealDetails/List";
 import { useContext, useLayoutEffect } from "react";
 import IconButton from "../components/IconButton";
 import { FavoritesContext } from "../store/context/favorites-context";
+import { addFavorite, removeFavorite } from "../store/redux/favorites";
+import { useDispatch, useSelector } from "react-redux";
 
 const MealDetailsScreen = ({ route, navigation }) => {
-  const favoriteMealsCtx = useContext(FavoritesContext);
+  /* const favoriteMealsCtx = useContext(FavoritesContext); */
 
   const mealId = route.params.mealId;
   const selectedMeal = MEALS.find((m) => m.id === mealId);
-  const mealIsFavorite = favoriteMealsCtx.ids.includes(mealId);
+  /*  const mealIsFavorite = favoriteMealsCtx.ids.includes(mealId); */
+  const mealIsFavorite = useSelector((state) =>
+    state.favorites.ids.includes(mealId)
+  );
+  const dispatch = useDispatch();
 
   const changeFavoriteStatusHandler = () => {
     if (mealIsFavorite) {
-      favoriteMealsCtx.removeFavorite(mealId);
+      dispatch(removeFavorite(mealId));
+      /*  favoriteMealsCtx.removeFavorite(mealId); */
     } else {
-      favoriteMealsCtx.addFavorite(mealId);
+      dispatch(addFavorite(mealId));
+
+      /*  favoriteMealsCtx.addFavorite(mealId); */
     }
   };
 
@@ -32,11 +41,11 @@ const MealDetailsScreen = ({ route, navigation }) => {
         />
       ),
     });
-  }, [navigation, changeFavoriteStatusHandler]);
+  }, [navigation, mealIsFavorite]);
 
   return (
     <ScrollView style={styles.rootContainer}>
-      <Image style={styles.image} source={{ uri: selectedMeal.id }} />
+      <Image style={styles.image} source={{ uri: selectedMeal.imageUrl }} />
       <Text>{selectedMeal.title}</Text>
       <MealDetails
         duration={selectedMeal.duration}
@@ -75,7 +84,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   listContainer: {
-    Width: "80%",
+    width: "80%",
   },
   listOuterContainer: {
     alignItems: "center",
