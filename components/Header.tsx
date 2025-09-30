@@ -1,10 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 
-const Input = () => {
+const Header = ({ totalPrice }: { totalPrice: number }) => {
   return (
     <View style={styles.header}>
       <Text style={styles.date}>Last 7 days</Text>
-      <Text style={styles.total}>10$</Text>
+      <Text style={styles.total}>{totalPrice}$</Text>
     </View>
   );
 };
@@ -28,4 +28,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Input;
+export default Header;

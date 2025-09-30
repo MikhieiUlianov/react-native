@@ -1,16 +1,29 @@
-import { FlatList } from "react-native";
+import { ExpenceType } from "@/store/expences";
+import { FlatList, StyleSheet } from "react-native";
 import ListItem from "./ListItem";
 
-const ItemsList = () => {
+const ItemsList = ({ items }: { items: ExpenceType[] }) => {
   return (
     <FlatList
-      data={[{ id: "d1" }]}
-      keyExtractor={(item) => item.id}
+      style={styles.itemsList}
+      data={items}
+      keyExtractor={(item) => item.id as string}
       renderItem={(itemData) => (
-        <ListItem title="book" price={10} date={"2025-10-10"} id="l1" />
+        <ListItem
+          title={itemData.item.title}
+          price={itemData.item.price}
+          date={itemData.item.date as string}
+          id={itemData.item.id as string}
+        />
       )}
     />
   );
 };
+
+const styles = StyleSheet.create({
+  itemsList: {
+    marginVertical: 20,
+  },
+});
 
 export default ItemsList;

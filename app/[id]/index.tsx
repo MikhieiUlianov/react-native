@@ -1,37 +1,28 @@
 import Button from "@/components/Button";
-import { removeExpence, updateItem } from "@/store/expences";
-import { RootState } from "@/store/store";
+import Inputs from "@/components/Inputs";
+import { ExpenceType, removeExpence, updateItem } from "@/store/expences";
 import { Ionicons } from "@expo/vector-icons";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
-import { useDispatch, useSelector } from "react-redux";
+import { StyleSheet, Text, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 const ExpenceScreen = () => {
   const { id } = useLocalSearchParams();
-  const normalizedId = Array.isArray(id) ? id[0] : id ?? "";
   const dispatch = useDispatch();
-  const state = useSelector((state: RootState) => state.expences);
-
-  console.log(state);
-  const existingItem = state.find((e) => e.id === normalizedId);
-
-  const [formData, setFormData] = useState({
-    id: normalizedId,
-    price: existingItem?.price.toString() ?? "0",
-    title: existingItem?.title ?? "",
-    date: existingItem?.date ?? new Date().toISOString(),
-  });
+  const router = useRouter();
+  const normalizedId = Array.isArray(id) ? id[0] : id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
+
+  const updateItemHandler = (data: ExpenceType) => {
+    dispatch(updateItem(data));
+    router.push("/");
+  };
 
   return (
     <View style={styles.container}>
       <View style={styles.buttonsContainer}>
-        <Button
-          /* onPress={() => router.push("/")} */ onPress={() =>
-            setIsFormOpen(false)
-          }
-        >
+        <Button onPress={() => setIsFormOpen(false)}>
           <Text style={styles.cancel}>Cancel</Text>
         </Button>
         <Button onPress={() => setIsFormOpen(true)}>
@@ -47,47 +38,10 @@ const ExpenceScreen = () => {
       )}
       {isFormOpen && (
         <>
-          <View style={styles.inputsContainer}>
-            <TextInput
-              style={styles.input}
-              value={formData.title}
-              placeholder="Title"
-              onChangeText={(text) =>
-                setFormData((prev) => ({ ...prev, title: text }))
-              }
-            />
-            {/*  <TextInput
-              style={styles.input}
-              value={formData.price.toString()}
-              placeholder="Price"
-              onChangeText={(price) =>
-                setFormData((prev) => ({ ...prev, price: Number(price) }))
-              }
-            /> */}
-            <TextInput
-              style={styles.input}
-              value={formData.price}
-              placeholder="Price"
-              keyboardType="numeric"
-              onChangeText={(price) =>
-                setFormData((prev) => ({ ...prev, price }))
-              }
-            />
-          </View>
-          <View style={styles.submitButtonContainer}>
-            <Button
-              onPress={() =>
-                dispatch(
-                  updateItem({
-                    ...formData,
-                    price: Number(formData.price), // convert here
-                  })
-                )
-              }
-            >
-              <Text style={styles.buttonText}>Update</Text>
-            </Button>
-          </View>
+          <Inputs
+            sendAction={(data) => updateItemHandler(data)}
+            itemId={normalizedId}
+          />
         </>
       )}
     </View>
@@ -117,28 +71,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     alignItems: "center",
     margin: 20,
-  },
-  inputsContainer: {
-    alignItems: "center",
-  },
-  input: {
-    width: "80%",
-    padding: 10,
-    backgroundColor: "#a9aded",
-    color: "#131532",
-    borderRadius: 10,
-    marginVertical: 20,
-  },
-  buttonText: {
-    padding: 15,
-    fontSize: 18,
-    color: "#1c0e4f",
-    backgroundColor: "#9591e8",
-    fontWeight: "800",
-    borderRadius: 10,
-  },
-  submitButtonContainer: {
-    alignItems: "center",
   },
 });
 export default ExpenceScreen;

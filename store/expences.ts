@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
-type ExpenceType = {
+export type ExpenceType = {
   id: string;
   title: string;
   date: string;

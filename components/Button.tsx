@@ -7,14 +7,8 @@ const Button = ({
 }: {
   children: ReactNode;
   onPress: () => void;
-  /* 
-  viewStyles?: Record<string, string | number>; */
 }) => {
-  return (
-    <Pressable onPress={onPress} /*  style={viewStyles} */>
-      {children}
-    </Pressable>
-  );
+  return <Pressable onPress={onPress}>{children}</Pressable>;
 };
 
 export default Button;

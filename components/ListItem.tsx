@@ -1,24 +1,23 @@
+import { ExpenceType } from "@/store/expences";
 import { useRouter } from "expo-router";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-const ListItem = ({
-  title,
-  date,
-  price,
-  id,
-}: {
-  title: string;
-  date: string;
-  price: number;
-  id: string;
-}) => {
+const ListItem = ({ title, date, price, id }: ExpenceType) => {
   const router = useRouter();
 
   return (
     <Pressable style={styles.listItem} onPress={() => router.push(`/${id}`)}>
       <View>
         <Text style={styles.title}>{title}</Text>
-        <Text style={styles.date}>{date}</Text>
+        <Text style={styles.date}>
+          {new Date(date).toLocaleString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </Text>
       </View>
       <View style={styles.priceContainer}>
         <Text style={styles.price}>{price}$</Text>
@@ -36,6 +35,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 15,
     borderRadius: 10,
+    marginTop: 20,
   },
   title: { color: "#dcd2f9", fontWeight: "800", fontSize: 18 },
   date: { color: "#dcd2f9", fontWeight: "800", fontSize: 14 },
