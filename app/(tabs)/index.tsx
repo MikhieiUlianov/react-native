@@ -1,22 +1,31 @@
+import ErrorOverlay from "@/components/ErrorOverlay";
 import Header from "@/components/Header";
 import ItemsList from "@/components/ItemsList";
+import LoadingOverlay from "@/components/LoadingOverlay";
 import { setExpences } from "@/store/expences";
 import { RootState } from "@/store/store";
 import { fetchExpences } from "@/util/http";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
 const RecentExpences = () => {
   const allExpences = useSelector((state: RootState) => state.expences);
-  /*   const [expences, setExpences] = useState<ExpenceType[]>([]); */
+  const [isFetching, setIsFetching] = useState(true);
+  const [isError, setIsError] = useState<boolean | string>(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
     const getExpences = async () => {
-      const data = await fetchExpences();
-      if (!data) throw new Error("Fetch failed");
-      dispatch(setExpences(data));
+      setIsFetching(true);
+      try {
+        const data = await fetchExpences();
+        dispatch(setExpences(data));
+      } catch (err) {
+        setIsError("Could not fetch expences!");
+      } finally {
+        setIsFetching(false);
+      }
     };
     getExpences();
   }, []);
@@ -30,6 +39,9 @@ const RecentExpences = () => {
     return expenceDate >= sevenDaysAgo && expenceDate <= now;
   });
   const totalPrice = filteredItems.reduce((acc, i) => acc + i.price, 0);
+
+  if (isFetching) return <LoadingOverlay />;
+  if (isError) <ErrorOverlay message={isError as string} />;
 
   return (
     <View style={styles.container}>

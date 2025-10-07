@@ -1,5 +1,7 @@
 import Button from "@/components/Button";
+import ErrorOverlay from "@/components/ErrorOverlay";
 import Inputs from "@/components/Inputs";
+import LoadingOverlay from "@/components/LoadingOverlay";
 import { ExpenceType, removeExpence, updateExpence } from "@/store/expences";
 import {
   deleteExpence as httpDeleteExpence,
@@ -17,17 +19,35 @@ const ExpenceScreen = () => {
   const router = useRouter();
   const normalizedId = Array.isArray(id) ? id[0] : id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
+  const [isError, setIsError] = useState<boolean | string>(false);
 
   const handleUpdate = async (data: ExpenceType) => {
-    dispatch(updateExpence(data));
-    await httpUpdateExpence(normalizedId, data);
-    router.push("/");
+    setIsFetching(true);
+    try {
+      dispatch(updateExpence(data));
+      await httpUpdateExpence(normalizedId, data);
+      router.push("/");
+    } catch (err) {
+      setIsError("Could not save data!");
+      setIsFetching(false);
+    }
   };
 
   const handleDelete = () => {
-    dispatch(removeExpence(normalizedId));
-    httpDeleteExpence(normalizedId);
+    setIsFetching(true);
+    try {
+      dispatch(removeExpence(normalizedId));
+      httpDeleteExpence(normalizedId);
+      router.back();
+    } catch (err) {
+      setIsError("Could not save data!");
+      setIsFetching(false);
+    }
   };
+
+  if (isFetching) return <LoadingOverlay />;
+  if (isError) <ErrorOverlay message={isError as string} />;
 
   return (
     <View style={styles.container}>
