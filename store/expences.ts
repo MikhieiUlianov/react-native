@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 export type ExpenceType = {
   id: string;
   title: string;
-  date: string;
+  date?: string;
   price: number;
 };
 

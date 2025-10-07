@@ -1,18 +1,31 @@
 import Header from "@/components/Header";
 import ItemsList from "@/components/ItemsList";
+import { ExpenceType } from "@/store/expences";
 import { RootState } from "@/store/store";
+import { fetchExpences } from "@/util/http";
+import { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { useSelector } from "react-redux";
 
-const TabsLayout = () => {
+const RecentExpences = () => {
   const allExpences = useSelector((state: RootState) => state.expences);
+  const [expences, setExpences] = useState<ExpenceType[]>([]);
+
+  useEffect(() => {
+    const getExpences = async () => {
+      const data = await fetchExpences();
+      if (!data) throw new Error("Fetch failed");
+      setExpences(data);
+    };
+    getExpences();
+  }, []);
 
   const now = new Date();
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(now.getDate() - 7);
 
   const filteredItems = allExpences.filter((e) => {
-    const expenceDate = new Date(e.date);
+    const expenceDate = new Date(e.date as string);
     return expenceDate >= sevenDaysAgo && expenceDate <= now;
   });
   const totalPrice = filteredItems.reduce((acc, i) => acc + i.price, 0);
@@ -39,4 +52,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TabsLayout;
+export default RecentExpences;

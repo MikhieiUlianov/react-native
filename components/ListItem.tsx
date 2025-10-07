@@ -4,7 +4,7 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 
 const ListItem = ({ title, date, price, id }: ExpenceType) => {
   const router = useRouter();
-
+  if (!date) return;
   return (
     <Pressable style={styles.listItem} onPress={() => router.push(`/${id}`)}>
       <View>

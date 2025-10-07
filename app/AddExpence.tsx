@@ -9,6 +9,7 @@ const AddExpence = () => {
   const router = useRouter();
 
   const addExpenceHendler = (data: ExpenceType) => {
+    addExpence(data);
     dispatch(addExpence(data));
     router.push("/");
   };
