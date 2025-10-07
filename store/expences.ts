@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 export type ExpenceType = {
-  id: string;
+  id?: string;
   title: string;
   date?: string;
   price: number;
@@ -18,10 +18,14 @@ const expencesSlice = createSlice({
     addExpence: (state, action) => {
       state.push(action.payload);
     },
+    setExpences: (state, action) => {
+      const inverted = action.payload.reverse();
+      return inverted;
+    },
     removeExpence: (state, action) => {
       return state.filter((e) => e.id !== action.payload);
     },
-    updateItem: (state, action: PayloadAction<ExpenceType>) => {
+    updateExpence: (state, action: PayloadAction<ExpenceType>) => {
       const existingExpenceIndex = state.findIndex(
         (e) => e.id === action.payload.id
       );
@@ -38,6 +42,7 @@ const expencesSlice = createSlice({
 
 const { actions, reducer } = expencesSlice;
 
-export const { addExpence, removeExpence, updateItem } = actions;
+export const { addExpence, removeExpence, updateExpence, setExpences } =
+  actions;
 
 export default reducer;

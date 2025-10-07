@@ -1,21 +1,22 @@
 import Header from "@/components/Header";
 import ItemsList from "@/components/ItemsList";
-import { ExpenceType } from "@/store/expences";
+import { setExpences } from "@/store/expences";
 import { RootState } from "@/store/store";
 import { fetchExpences } from "@/util/http";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const RecentExpences = () => {
   const allExpences = useSelector((state: RootState) => state.expences);
-  const [expences, setExpences] = useState<ExpenceType[]>([]);
+  /*   const [expences, setExpences] = useState<ExpenceType[]>([]); */
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const getExpences = async () => {
       const data = await fetchExpences();
       if (!data) throw new Error("Fetch failed");
-      setExpences(data);
+      dispatch(setExpences(data));
     };
     getExpences();
   }, []);

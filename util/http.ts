@@ -3,8 +3,10 @@ import axios from "axios";
 
 const url = `https://react-native-expences-default-rtdb.firebaseio.com`;
 
-export const storeExpence = (data: ExpenceType) => {
-  axios.post(url + "/expences.json", data);
+export const storeExpence = async (data: ExpenceType) => {
+  const response = await axios.post(url + "/expences.json", data);
+  const id = response.data.name;
+  return id;
 };
 
 export const fetchExpences = async (): Promise<ExpenceType[]> => {
@@ -22,4 +24,11 @@ export const fetchExpences = async (): Promise<ExpenceType[]> => {
   }
 
   return expences;
+};
+
+export const updateExpence = (id: string, data: ExpenceType) =>
+  axios.put(url + `/expences/${id}.json`, data);
+
+export const deleteExpence = async (id: string) => {
+  return axios.delete(url + `/expences/${id}.json`);
 };

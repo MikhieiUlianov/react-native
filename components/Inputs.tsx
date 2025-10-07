@@ -5,13 +5,11 @@ import Button from "./Button";
 
 const Inputs = ({
   sendAction,
-  itemId,
 }: {
   sendAction: (data: ExpenceType) => void;
   itemId?: string;
 }) => {
   const [formData, setFormData] = useState({
-    id: itemId || Math.random().toString(),
     price: "0",
     title: "",
     date: new Date().toISOString(),
@@ -39,7 +37,6 @@ const Inputs = ({
         <Button
           onPress={() =>
             sendAction({
-              id: formData.id,
               title: formData.title,
               price: Number(formData.price),
               date: formData.date,

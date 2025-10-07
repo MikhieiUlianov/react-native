@@ -1,6 +1,10 @@
 import Button from "@/components/Button";
 import Inputs from "@/components/Inputs";
-import { ExpenceType, removeExpence, updateItem } from "@/store/expences";
+import { ExpenceType, removeExpence, updateExpence } from "@/store/expences";
+import {
+  deleteExpence as httpDeleteExpence,
+  updateExpence as httpUpdateExpence,
+} from "@/util/http";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
@@ -14,9 +18,15 @@ const ExpenceScreen = () => {
   const normalizedId = Array.isArray(id) ? id[0] : id ?? "";
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  const updateItemHandler = (data: ExpenceType) => {
-    dispatch(updateItem(data));
+  const handleUpdate = async (data: ExpenceType) => {
+    dispatch(updateExpence(data));
+    await httpUpdateExpence(normalizedId, data);
     router.push("/");
+  };
+
+  const handleDelete = () => {
+    dispatch(removeExpence(normalizedId));
+    httpDeleteExpence(normalizedId);
   };
 
   return (
@@ -31,7 +41,7 @@ const ExpenceScreen = () => {
       </View>
       {!isFormOpen && (
         <View style={styles.remove}>
-          <Button onPress={() => dispatch(removeExpence(normalizedId))}>
+          <Button onPress={handleDelete}>
             <Ionicons name="trash" color={"red"} size={35} />
           </Button>
         </View>
@@ -39,7 +49,7 @@ const ExpenceScreen = () => {
       {isFormOpen && (
         <>
           <Inputs
-            sendAction={(data) => updateItemHandler(data)}
+            sendAction={(data) => handleUpdate(data)}
             itemId={normalizedId}
           />
         </>

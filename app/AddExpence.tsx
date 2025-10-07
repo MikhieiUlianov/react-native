@@ -3,14 +3,15 @@ import { addExpence, ExpenceType } from "@/store/expences";
 import { useRouter } from "expo-router";
 import { StyleSheet, View } from "react-native";
 import { useDispatch } from "react-redux";
+import { storeExpence } from "../util/http";
 
 const AddExpence = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const addExpenceHendler = (data: ExpenceType) => {
-    addExpence(data);
-    dispatch(addExpence(data));
+  const addExpenceHendler = async (data: ExpenceType) => {
+    const id = await storeExpence(data);
+    dispatch(addExpence({ ...data, id }));
     router.push("/");
   };
   return (
