@@ -12,8 +12,8 @@ function LoginScreen() {
       await login(email, password);
     } catch (e) {
       Alert.alert("Authentication failed", "Could not log you in.");
+      setLoading(false);
     }
-    setLoading(false);
   }
 
   if (loading) return <LoadingOverlay message={"Logging you in..."} />;
