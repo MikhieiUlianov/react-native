@@ -8,7 +8,7 @@ const Map = ({ navigation }) => {
 
   const region = {
     latitude: 37.78,
-    longitude: -122 - 43,
+    longitude: -122.43,
     latitudeDelta: 0.0922,
     longitudeDelta: 0.0421,
   };
@@ -23,20 +23,22 @@ const Map = ({ navigation }) => {
   }
 
   const savePickedLocation = useCallback(() => {
-    if (!selectLocation)
+    if (!selectedLocation) {
       Alert.alert(
         "No location picked!",
         "You have to pick a location (by tapping on the map) first!"
       );
+      return;
+    }
 
     navigation.navigate("AddPlace", {
-      pickedLat: selectLocation.lat,
-      pickedLng: selectLocation.lng,
+      pickedLat: selectedLocation.lat,
+      pickedLng: selectedLocation.lng,
     });
-  }, [navigation, selectLocation]);
+  }, [navigation, selectedLocation]);
 
   useLayoutEffect(() => {
-    navigation.setOptionss({
+    navigation.setOptions({
       headerRight: ({ tintColor }) => (
         <IconButton
           icon={"save"}
@@ -54,8 +56,8 @@ const Map = ({ navigation }) => {
         <Marker
           title="Picked Location"
           coordinate={{
-            latitude: selectLocation.lat,
-            longitude: selectLocation.lng,
+            latitude: selectedLocation.lat,
+            longitude: selectedLocation.lng,
           }}
         />
       )}
